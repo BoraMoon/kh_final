@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="profile">
+
+
+<select id="selectOne" resultMap="ProfileMap">
+	select 
+		* 
+	from 
+		MEMBER_PROFILE
+	where member_Id=#{profileMemberId}
+</select>
+
+
+
+	<resultMap type="Profile" id="ProfileMap">
+		<result column="contents_Cate_Codes" property="contentsCateCodes" typeHandler="StrArrTypeHandler"/>
+	</resultMap>
+
+
+
+<select id="selectOneProfileWithCode" resultMap="ProfileMap">
+	select 
+		* 
+	from 
+		MEMBER_PROFILE
+	where member_Code=#{memberCode}
+</select>
+
+	<select id="selectProfileByMemberCode" resultMap="ProfileMap">
+	select 
+		*
+	from
+		member_profile
+	where member_code = #{clubMaster}
+	</select>
+</mapper>
+
+

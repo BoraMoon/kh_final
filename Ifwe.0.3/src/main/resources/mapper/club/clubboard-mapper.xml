@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="clubBoard">
+	
+	<insert id="insertboardList">
+		insert into club_boardlist
+		values(seq_club_boardlist_no.nextval,
+			   #{clubCode},
+			   #{boardTitleList})
+	
+	</insert>
+	
+	
+	<select id="selectOne" resultType="clubBoard">
+		select 
+			* 
+		from
+			club_boardlist 
+		where
+			club_boardlist_no = #{clubBoardlistNo}
+	</select>	
+	
+	<insert id="insertBoard">
+		insert 
+			into 
+		club_board 
+			values(
+				seq_board_no.nextval, 
+				#{clubCode}, 
+				#{memberCode}, 
+				#{clubBoardlistNo}, 
+				#{boardTitle}, 
+				#{boardContent}, 
+				default, 
+				0, 
+				#{boardCateCode, typeHandler=StrArrTypeHandler}, 
+				'n', 
+				'n',
+				default,
+				default
+			)
+			
+		<selectKey keyProperty="boardNo" resultType="_int" order="AFTER">
+			select seq_board_no.currval from dual
+		</selectKey>
+		
+	</insert>
+	
+	<insert id="insertBoardImages">
+		insert into board_img values(#{boardNo},#{summernoteImages},#{summernoteImagesRe})
+	</insert>
+	
+	<select id="selectClubBoardList" resultMap="clubBoardProfileMap">
+		select 
+			C.*,L.*,M.profile_name, M.profile_img_re
+		from 
+			club_board C 
+		left join 
+			club_boardlist L 
+		on 
+			C.club_boardlist_no = l.club_boardlist_no 
+		left join 
+			member_profile M 
+		on 
+            C.member_code = M.member_code 
+		where 
+			L.club_boardlist_no = #{clubBoardlistNo} 
+		and C.board_report in ('n','d')
+		order by 
+			C.board_no desc
+	</select>
+	
+	<resultMap type="clubBoardProfile" id="clubBoardProfileMap">
+		<result column="board_cate_code" property="boardCateCode" typeHandler="strArrTypeHandler"/>
+	</resultMap>
+	
+	<select id="selectClubBoardNo" resultType="boardImg">
+		select board_no from club_board
+		where
+		club_boardlist_no = #{clubBoardlistNo}
+	
+	</select>
+	
+	<select id="selectClubBoardImg" resultType="boardImg">
+		select * from board_img
+		where
+		board_no in
+		<foreach collection="list" item="item" open="(" close=")" separator=",">
+		#{item.boardNo}
+		</foreach>
+	
+	</select>
+	
+	<select id="selectBoardImgajax" resultType="boardImg">
+		select * from board_img
+		where board_no = #{boardNo}
+	</select>
+	
+	<update id="updateBoardImg">
+		update club_board set board_imgyn = 'y'
+		where board_no = #{boardNo}
+	
+	</update>
+	
+	<select id="selectClubBoardNoList" resultType="boardImg">
+		select board_no from club_board
+		where
+		club_code = #{clubCode}
+	
+	</select>
+	
+	<insert id="insertComment">
+		insert into CLUB_BOARD_COMMENT
+		values(seq_club_boardlist_no.nextval,
+			   #{boardRef},
+			   #{memberCode},
+			   #{commentContent},
+			   default,
+			   'n','n')
+	</insert>
+	
+	<select id="selectBoardCommentMain" resultType="clubBoardComment">
+		
+		select C.*,P.profile_name,P.profile_img_re
+		from club_board_comment C join club_board B
+                                  on B.board_no = C.board_ref
+                                  join member_profile P
+                                  on C.member_code = P.member_code
+		where B.club_code = #{clubCode}
+		order by C.comment_date
+	
+	</select>
+	
+	<update id="updateClubBoard">
+		update club_board set board_comment_yn = 'y'
+		where board_no = #{boardRef}
+	</update>
+	
+	<select id="selectFreeboardCmt" resultType="clubBoardComment">
+		select C.*,P.profile_name,P.profile_img_re
+		from club_board_comment C join club_board B
+                                  on B.board_no = C.board_ref
+                                  join member_profile P
+                                  on C.member_code = P.member_code
+		where B.club_boardlist_no = #{clubBoardlistNo}
+		order by C.comment_date
+	</select>
+	
+	<update id="reportBoard">
+		update 
+			club_board 
+		set 
+			board_report = 'd' 
+		where 
+			board_no=#{boardNo}
+	</update>
+	
+	
+	<insert id="insertHeart">
+		insert into board_heart_tbl
+		values (#{boardNo},#{memberCode})
+	</insert>
+	
+	<select id="selectBoard" resultType="_int">
+		select board_heart from club_board where board_no = #{boardNo}
+	</select>
+	
+	<delete id="deleteHeart">
+		delete from board_heart_tbl where board_no = #{boardNo} and member_code = #{memberCode}
+	</delete>
+	
+	<!-- 0409 dongjun 좋아요 - 내가좋아요한게시물불러오기 -->
+	<select id="selectMyHeartList" resultType="_int">
+		select 
+		    board_no 
+		from 
+    		board_heart_tbl
+   		<where>
+   			member_code = #{memberCode}
+   		</where>
+	
+	</select>
+	<!-- 0409 donjun 내가 쓴 소모임 게시물 -->
+	<select id="selectMyClubBoard" resultType="clubBoard">
+		select 
+			* 
+		from 
+			club_board 
+		where member_code = #{memberCode}
+		order by board_date desc
+	</select>
+
+</mapper>
+
+

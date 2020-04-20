@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="club">
+	<insert id="clubCreate">
+		insert into club
+		values(
+			seq_club_no.nextval,
+			#{clubMaster},
+			#{clubTitle},
+			#{clubImgOri},
+			#{clubImgRe},
+			1,
+			#{clubMax},
+			default,
+			#{clubContent},
+			#{clubCatecode},
+			#{clubLocation},
+			null
+			)
+		<selectKey keyProperty="clubCode" resultType="_int" order="AFTER">
+			select seq_club_no.currval from dual
+		</selectKey>
+	</insert>
+	
+	<select id="selectSeq" resultType="_int">
+		select SEQ_club_no.currval
+		from dual
+	</select>
+	
+	<select id="selectCate" resultType="String">
+		select * from contents_category
+		where cate_code = #{hashtag}
+	</select>
+	
+	<insert id="insertContent">
+		insert into contents_category
+		values(#{hashtag})
+	
+	</insert>
+	
+	<insert id="insertCategory" parameterType="HashMap">
+		insert into club_category
+		values(
+			#{clubseq},
+			#{clubcate}
+			)
+	
+	</insert>
+
+	<select id="clubSearch" resultType="clubMaster">
+		select C.*, M.member_id from club C left join member M on c.club_master = m.member_code
+	</select>
+	
+	<select id="selectOne" resultType="club">
+		select * from club where club_code = #{clubCode}
+	</select>
+	
+	
+	<select id="selectClubMaster" resultType="member">
+		select * from member where member_code = #{clubMaster}
+
+	</select>
+	
+	<select id="searchClubByHashtag" resultType="clubMaster">
+		select    *
+		from 
+		    club C 
+		left join 
+		    member M 
+		on 
+		    c.club_master = m.member_code 
+		left join 
+		    club_category CC 
+		on 
+		    c.club_code=cc.club_code
+		<where>
+	        CC.club_cate like #{keyWord}
+	        <if test="clubLocation != '' ">
+				and club_location = #{clubLocation}
+			</if>
+		</where>
+		order by cc.club_code
+	</select>
+	
+	<select id="selectListByName" resultType="clubMaster">
+		select * from club C left join member M on C.club_master=M.member_code 
+		<where>
+			club_title like #{keyWord} 
+			
+			<if test="clubLocation != '' ">
+				and club_location = #{clubLocation}
+			</if>
+		</where>
+		order by C.club_code
+	</select>
+	
+	<select id="selectMemberCode" resultType="member" parameterType="_int">
+		select member_code 
+		from club_members
+		where club_grade in('member','nm') and club_code = #{clubCode}
+	
+	</select>
+	
+	<select id="selectClubMember" resultType="clubMember">
+		select M.*,p.profile_name,p.profile_img_re,H.club_grade
+		from member M join member_profile P on M.member_code = P.member_code
+                      join club_members H on M.member_code=H.member_code
+		where 
+		M.member_code in
+		<foreach collection="clubMemberCode" item="item" open="(" close=")" separator=",">
+		#{item.memberCode}
+		</foreach>
+		and H.club_code = #{clubCode}
+	</select>
+	
+	<select id="selectClubMaster2" resultType="clubMember">
+		select M.*,p.profile_name,p.profile_img_re,H.club_grade
+		from member M join member_profile P on M.member_code = P.member_code
+                      join club_members H on M.member_code=H.member_code
+        where M.member_code = #{masterCode} and H.club_code = #{clubCode}
+     </select> 
+        
+        
+	<insert id="insertMsgEnroll">
+		insert into 
+			member_msg 
+		values(
+				seq_msg_code.nextval, 
+				#{masterCode}, 
+				'c1', 
+				#{enrollreason}, 
+				default, 
+				default, 
+				#{memberCode},
+				#{clubCode}
+				
+		)
+	</insert>
+	
+	<select id="selectMsgList" resultType="message">
+		select 
+			M.*, Me.member_name 
+		from 
+			member_msg M 
+		left join 
+			member ME 
+		on 
+			M.member_from = ME.member_code
+		where
+			club_code = #{clubCode} and msg_view = 'n'
+	</select>
+	
+	<select id="selectMsgOne" resultType="msgPro">
+		 select 
+			M.*, Me.member_name ,ME.member_id,P.profile_img_re
+		from 
+			member_msg M 
+		left join 
+			member ME 
+		on 
+			M.member_from = ME.member_code
+        left join 
+            member_profile P 
+        on 
+            ME.member_code = P.member_Code
+		where
+			msg_code = #{msgCode}
+	</select>
+	
+	<insert id="insertClubMembers">
+		insert into
+			club_members
+		values(
+			#{clubCode},
+			#{memberCode},
+			'nm',
+			default)
+	</insert>
+	
+	<update id="updateMembersGrade">
+		update 
+			club_members 
+		set 
+			club_grade = 'member' 
+		where 
+			member_code = #{memberCode}
+	</update>
+	
+	<delete id="deleteMembers">
+		delete from club_members where member_code = #{memberCode}
+	</delete>
+	
+	<update id="updateMsgView">
+		update
+			member_msg
+		set 
+			msg_view = 'y'
+		where 
+			msg_code = #{msgCode}
+	</update>
+	
+	
+	<update id="updateClub">
+		update
+			club
+		set
+			club_title = #{clubTitle},
+			club_img_ori=#{clubImgOri},
+			club_img_re=#{clubImgRe},
+			club_location=#{clubLocation},
+			club_content=#{clubContent},
+			club_max=#{clubMax}
+		where
+			club_code=#{clubCode}
+			
+	
+	</update>
+	
+	<select id="clubLoggedIn" resultType="clubLoggedIn">
+		select M.*,p.profile_name,p.profile_img_re,H.club_grade,h.club_enrolldate
+		from member M join member_profile P 
+					  on M.member_code = P.member_code
+                      join club_members H 
+                      on M.member_code=H.member_code
+		where M.member_code = #{memberCode} and H.club_code = #{clubCode}
+	</select>
+		
+	<delete id="deleteClubMember">
+		delete from club_members
+		where club_code = #{clubCode} and member_code = #{memberCode}
+	
+	</delete>	
+	
+
+	<insert id="insertBoard">
+		inert
+	</insert>
+
+	<select id="selectBoardList" resultType="clubBoard">
+		select * from club_boardlist
+		where club_code = #{clubCode}
+		order by club_boardlist_no
+		
+	</select>
+
+	
+	<select id="selectclubBoardProfileList" resultMap="clubBoardProfileMap">
+		select 
+			C.*,L.*,M.profile_name, M.profile_img_re
+		from 
+			club_board C 
+		left join 
+			club_boardlist L 
+		on 
+			C.club_boardlist_no = l.club_boardlist_no 
+		left join 
+			member_profile M 
+		on 
+            C.member_code = M.member_code 
+		where 
+			C.club_code = #{clubCode}
+		and C.board_report in ('n','d')
+		order by 
+			C.board_no desc
+	</select>
+
+	
+	<resultMap type="clubBoardProfile" id="clubBoardProfileMap">
+		<result column="board_cate_code" property="boardCateCode" typeHandler="strArrTypeHandler"/>
+	</resultMap>
+	
+	
+	<delete id="deleteMsg">
+		delete from member_msg
+		where club_code = #{clubCode} and member_from = #{memberCode} and msg_cate_code = 'c1'
+	</delete>
+	
+	<insert id="insertSearchKeyword">
+		insert into
+			tbl_search
+		values (
+			seq_search_no.nextval, 
+			#{clubSearchKeyword}, 
+			default, 
+			#{memberCode}
+		)
+	</insert>
+	
+	<select id="selectMaleCount" resultMap="maleCount">
+		select 
+			count(*) as cnt,C.club_code 
+		from 
+			club_members C 
+		left join 
+			member M 
+		on 
+			C.member_code = M.member_code 
+		where 
+			C.club_code in
+		<foreach collection="list" item="item" open="(" close=")" separator=",">
+			#{item}
+		</foreach> 
+		and
+			M.member_gender='m' 
+		group by
+			C.club_code 
+	</select>
+	
+	<resultMap type="count" id="maleCount">
+		 <result property="maleCount" column="cnt"/>
+		 <result property="clubCode" column="club_code"/>
+		 <result property="age" column="profile_age"/>
+	</resultMap>
+	
+	<select id="selectAge" resultMap="maleCount">
+		select 
+			C.club_code,M.profile_age 
+		from 
+			club_members C 
+		left join 
+			member_profile M 
+		on 
+			C.member_code = M.member_code 
+		where 
+			c.club_code in 
+		<foreach collection="list" item="item" open="(" close = ")" separator=",">
+			#{item}
+		</foreach>
+		order by 
+			c.club_code
+	</select>
+	
+
+	<select id="selectClubCateList" resultType="club">
+		select
+			*
+		from
+			club
+		where
+			club_catecode like #{clubCatecode}
+	</select>
+	
+	<!-- <select id="selectSearchKeywordList" resultType="SearchKeyword">
+		<![CDATA[
+		select * 
+			from 
+			(
+			select 
+				count(*) RANK, search_keyword 
+			from 
+				tbl_search 
+			group by 
+				search_keyword 
+			order by 
+				RANK DESC
+			) S
+		where S.rownum > 6
+		  ]]>
+	</select> -->
+	
+	<select id="selectSearchKeywordList" resultType="SearchKeyword">
+	<!-- 	select
+			*
+		from
+		( -->
+		select
+			count(*) RANK, search_keyword
+		from
+			tbl_search
+		group by
+			search_keyword
+		order by
+			RANK desc
+<!-- 		) -->
+		</select>
+
+	<select id="selectclubBoardSearch" resultMap="clubBoardProfileMap">
+		select 
+			C.*,L.*,M.profile_name, M.profile_img_re
+		from 
+			club_board C 
+		left join 
+			club_boardlist L 
+		on 
+			C.club_boardlist_no = l.club_boardlist_no 
+		left join 
+			member_profile M 
+		on 
+            C.member_code = M.member_code 
+		where 
+			C.club_code = #{clubCode} and C.board_cate_code like '%'||#{searchTag}||'%'
+		order by 
+			C.board_no desc
+
+	</select>
+	<select id="selectAgeAvg" resultType="_int">
+		select 
+		sum(M.profile_age )
+		from 
+			club_members C 
+		left join 
+			member_profile M 
+		on 
+			C.member_code = M.member_code 
+		where 
+			c.club_code = #{clubCode}
+        group by c.club_code
+	</select>
+	<select id="selectReportBoardList" resultType="clubBoardProfile">
+		select * from CLUB_BOARD C left join member_profile M on c.member_code = M.member_code where club_code=#{clubCode} and board_report = 'd'
+	</select>
+	
+	<update id="blindBoard">
+		update club_board set board_report = 'y' where board_no = #{boardNo}
+	</update>
+	
+	<select id="selectHeartMember" resultType="heart">
+		 select b.*,p.profile_name from board_heart_tbl B left join member_profile P on b.member_code = P.member_code
+	</select>
+</mapper>
+
+

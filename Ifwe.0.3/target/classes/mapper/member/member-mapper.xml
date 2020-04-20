@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="member">
+	<insert id="insertMember">
+		insert into member
+		values(
+		seq_member_no.nextval,
+		#{memberId},
+		#{memberPwd},
+		#{memberName},
+		#{memberPhone},
+		#{memberLoc},
+		#{memberEmail},
+		#{memberBirth},
+		#{memberGender},
+		#{memberAddr},
+		default,
+		null,'member',0,
+		#{memberLike}
+		)
+	</insert>
+	<select id="selectOne" resultType="member">
+		select * from member where
+		member_id = #{memberId}
+	</select>
+
+	<update id="updatePassword">
+		update
+		member
+		set
+		member_pwd = #{memberPwd}
+		where
+		member_id = #{memberId}
+	</update>
+
+	<update id="updatePhone">
+		update
+		member
+		set
+		member_phone = #{memberPhone}
+		where
+		member_id = #{memberId}
+	</update>
+
+	<update id="updateEmail">
+		update
+		member
+		set
+		member_email = #{memberEmail}
+		where
+		member_id = #{memberId}
+	</update>
+
+	<update id="deleteMember">
+		update
+		member
+		set
+		member_role = #{memberRole}
+		where
+		member_id = #{memberId}
+	</update>
+
+	<select id="searchId" resultType="member">
+		select
+		*
+		from
+		member
+		where
+		member_name = #{memberName}
+		and
+		member_phone = #{phone}
+		and
+		member_birth = to_date(#{birth}, 'yyyy/mm/dd')
+	</select>
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<!-- 20200323김원재 -->
+	<update id="updateProfile">
+
+		update
+		member_profile
+		set
+		profile_name=#{profileName},
+		profile_img_ori=#{profileImgOri},
+		profile_img_re=#{profileImgRe},
+		profile_comment =#{profileComment},
+		profile_age = #{profileAge},
+		profile_gender=#{profileGender},
+		contents_cate_codes =#{contentsCateCodes, typeHandler=StrArrTypeHandler}
+		where
+		member_code=#{memberCode}
+	</update>
+
+	<insert id="insertProfile">
+
+
+		insert into member_profile values(
+		#{memberCode},'닉네임없음',null,null,null,'0',#{memberGender},null
+
+		)
+
+	</insert>
+
+	<insert id="insertPre">
+
+		insert into premium_order values(
+		seq_order_code.nextval,
+		#{clubCode},
+		#{membershipName},
+		#{memberCode}
+
+		)
+
+	</insert>
+
+	<select id="selectOneCode" resultType="member">
+
+		select * from member
+		where member_code=#{memberCode}
+	</select>
+	
+	<select id="selectClubList" resultType="club">
+		select 
+			* 
+		from 
+			club C
+		left join 
+			club_members M
+		on 
+			C.club_code = M.club_code 
+		where 
+			M.member_code = #{memberCode}
+	
+	</select>
+	
+	<select id="checkId" resultType="member">
+		
+		select *
+			from member
+		where
+			member_id = #{memberId}
+		
+	</select>
+
+	<select id="selectMemberLogin" resultType="memberLoggedIn">
+		select M.*,p.profile_name,p.profile_img_re
+		from member M join member_profile P 
+            on M.member_code = P.member_code
+        where M.member_code = #{memberCode}
+		
+	</select>
+
+
+	<select id="selectInterClub" resultType="clubMaster">
+		select 
+			M.member_id, C.* 
+		from 
+			club C 
+		left join 
+			member M 
+		on 
+			c.club_master = m.member_code 
+		where 
+			club_catecode = #{memberLike}
+	</select>
+	
+	<insert id="insertMsgFriend" >
+		insert into
+			member_msg
+		values(
+			seq_msg_code.nextval,
+			#{memberCode},
+			'f1',
+			'친구',
+			default,
+			default,
+			#{fromMember},
+			0
+		) 
+	</insert>
+	
+	<select id="selectFriendList" resultType="message" >
+		select 
+			F.*,M.member_name,M.member_id
+		from
+			member_msg F left join member M
+		on
+			F.member_from = M.member_code
+		where
+			F.member_code = #{memberCode}
+		and
+			msg_cate_code = 'f1' 
+	</select>
+	
+	<update id="friendYes">
+		update
+			member_msg
+		set
+			msg_view = 'y'
+		where
+			member_from = #{memberFrom}
+		and
+			msg_cate_code = 'f1'
+		
+	</update>
+	
+	<update id="friendNo">
+		update
+			member_msg
+		set
+			msg_view = 'y'
+		where
+			member_from = #{memberFrom}
+		and
+			msg_cate_code = 'f1'
+		
+	</update>
+	
+	<select id="selectOneForFriend" resultMap="friendMap">
+		select 
+			Me.member_code,Me.member_from friend_code,M.member_id,P.profile_name member_pname
+		from
+			member_msg Me left join member_profile P
+		on 
+			Me.member_from = P.member_code
+			left join member M
+		on 
+			Me.member_from = M.member_code
+		where 
+			Me.member_from = #{memberFrom} and Me.msg_cate_code = 'f1'
+			and Me.member_code = #{memberCode}
+		order by 
+			msg_date desc
+	</select>
+	<resultMap type="friend" id="friendMap">
+		<id column="member_code" property="memberCode"/>
+		<result column="friend_code" property="friendCode"/>
+		<result column="member_Id" property="memberId"/>
+		<result column="member_pname" property="memberPname"/>
+	</resultMap>
+	
+	<insert id="insertFriends">
+		insert into
+			friend 
+		values(
+			#{memberCode},
+			#{memberId},
+			#{memberPname},
+			#{friendCode}
+			)
+		
+	</insert>
+	
+	<insert id="insertOtherFriend">
+		insert into
+			friend 
+		values(
+			#{memberCode},
+			#{memberId},
+			#{memberPname},
+			#{friendCode}
+			)
+	</insert>
+	
+	<select id="selectMsgCount" resultType = "_int">
+		select 
+			count(*) 
+		from 
+			member_msg
+		<where> 
+			msg_cate_code = 'f1' 
+		and 
+			msg_view = 'n'
+		and
+			member_code = #{memberCode}
+		</where>
+	</select>
+	
+	<select id="selectMsgFriend" resultType="friendList">
+		select F.*,P.profile_img_re
+		from friend F join member_profile P
+              		   on F.friend_code = P.member_code
+		where F.member_code=#{memberCode}
+	</select>
+
+	<insert id="insertLoginRecord">
+	
+	insert into 
+		loginrecord 
+	values
+	(seq_loginrecord_no.nextval,#{memberCode},sysdate,'n')
+	</insert>
+
+	<update id="logoutRecordUpdate">
+	
+	update
+		 loginrecord 
+	set 
+		loginrecord_logout = 'y'
+	where
+		 member_code = #{memberCode}
+	
+	</update>
+
+
+	<update id="loginRecordUpdate">
+		
+		
+	insert into 
+		loginrecord 
+	values
+		(seq_loginrecord_no.nextval,#{memberCode},sysdate,'n')
+		
+	
+	
+	</update>
+	<select id="selectFriendMsgCount" resultType="_int">
+		select 
+			count(*) 
+		from 
+			member_msg
+		<where> 
+			msg_cate_code = 'm1' 
+		and 
+			msg_view = 'n'
+		and
+			member_code = #{memberCode}
+		</where>
+	</select>
+	
+	<select id="selectOneMsg" resultType="_int">
+		select 
+			count(*)
+		from
+			member_msg
+		<where>
+			msg_cate_code = 'f1'
+		and
+			member_code = #{memberCode}
+		and
+			member_from = #{fromMember}
+		</where>
+	</select>
+	
+	<select id="selectClubList2" resultType="club">
+		select 
+			* 
+		from 
+			club C
+		left join 
+			club_members M
+		on 
+			C.club_code = M.club_code 
+		where 
+			M.member_code = #{memberCode}
+		and
+			C.club_master = #{memberCode}
+	</select>
+	
+</mapper>
+
+

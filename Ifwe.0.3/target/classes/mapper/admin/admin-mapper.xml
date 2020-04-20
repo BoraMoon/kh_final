@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="admin">
+	<insert id="insertBoard">
+	
+	insert into board values (
+    seq_board_no.nextval,
+    #{memberCode},
+    #{boardCate},
+    #{boardTitle},
+    #{boardContent},
+    #{boardImgOri},
+    #{boardImgRe},
+    default,
+    default,
+    default,
+    default    
+	)
+	</insert>
+	
+	<select id="selectMemberList" resultType="member">
+		select
+			*
+		from
+			member
+		where member_role like #{memberRole}
+		order by
+			member_enrolldate desc
+	</select>
+	
+	<select id="selectDropMemberList" resultType="member">
+		select
+			*
+		from
+			member
+		where
+			member_role = 'd'
+	</select>
+	
+	<select id="selectDormantMemberList" resultType="member">
+		select
+			*
+		from
+			member
+		where
+			member_role ='h'
+	</select>
+	
+	<select id="selectOne" resultType="member">
+		select
+			*
+		from
+			member
+		where
+			member_code = #{memberCode}
+	</select>
+	
+	<update id="cancelMember">
+		update
+			member
+		set
+			member_role = 'member'
+		where
+			member_code = #{memberCode}
+	</update>
+	
+	<update id="dropMember">
+		update
+			member
+		set
+			member_role = 'd'
+		where
+			member_code = #{memberCode}
+	</update>
+
+	<select id="searchMember" resultType="member">
+		select
+			*
+		from
+			member
+		where
+			member_name = #{memberName}
+	</select>
+
+
+	<select id="selectOneBoard" resultType="board">		
+			select 
+				* 
+			from 
+				board
+			where 
+				BOARD_CATE like #{boardCategory} and  board_del in('d','N')
+			order by 
+				board_date desc
+	</select>
+
+	<select id="selectBoardDetail" resultType="board">
+			select 
+				* 
+			from 
+				board 
+			where 
+				board_no = #{boardNo}
+	</select>
+	
+	
+	<!-- 0326 동준 작업 게시글 삭제-->
+	<update id="deleteBoard">
+	 	update board set 
+			board_del = 'y'
+		where
+			board_no = #{boardNo}
+	</update>
+	
+	<!-- 0326 동준 작업 게시글 내용 수정-->
+	 <update id="updateBoardOne">
+	 	update board set 
+	 		board_title = #{boardTitle},
+	 		board_content = #{boardContent}
+ 		where 
+ 			board_no = #{boardNo}
+	 </update>
+	 
+	 <insert id="insertBoardComment">
+	 	insert into
+	 		board_comment	
+	 	values(
+	 		seq_board_comment_no.nextval,
+	 		#{memberCode},
+	 		#{boardNo},
+	 		#{commentContent},
+	 		default,
+	 		'1',
+	 		'1'
+		 	)	
+	 </insert>
+	 
+	 <select id="selectBoardComment" resultType="BoardComment">
+	 	select
+	 		*
+	 	from
+	 		board_comment
+	 	where
+	 		board_no = #{boardNo}
+	 </select>
+	 
+	 <delete id="deleteBoardComment">
+		delete 
+			board_comment
+		where 
+			board_no = #{boardNo}
+	 </delete>
+	 
+	 <update id="updateBoardComment">
+	 	update board_comment set
+	 	comment_content = #{commentContent}
+	 	where board_no = #{boardNo}
+	 </update>
+		 
+	 
+	 <insert id="insertDormantNotice">
+		insert into board values (
+    seq_board_no.nextval,
+    #{memberCode},
+    'report',
+    '휴면해지신청',
+    '휴면해지 신청합니다',
+    null,
+    null,
+    default,
+    default,
+    default,
+    default    
+	)
+	 </insert>
+	 
+	 <update id="updateReportNotice">
+	 	update
+	 		board
+	 	set
+	 		board_del='d'
+	 	where
+	 		member_code = #{memberCode}
+	 </update>
+	 
+	 	 <insert id="EventInsert">
+	 	insert into
+	 		tbl_event
+	 	values(
+	 		seq_event_no.nextval,
+	 		#{eventTitle},
+	 		#{eventContent},
+	 		#{eventStart},
+	 		#{eventEnd},
+	 		'10000',
+	 		#{eventImgOri},
+	 		#{eventImgRe}
+	 	)
+	 </insert>
+	 
+	 <select id="EventList" resultType="AdminEvent">
+	 	select
+	 		*
+	 	from
+	 		tbl_event
+	 	where
+	 		member_code=10000
+	 </select>
+	 
+	<update id="EventDel">
+		update tbl_event set
+		member_code = '2'
+		where event_code = #{eventCode}
+	</update>
+	 
+	 <select id="EventSelectOne" resultType="AdminEvent">
+	 	select 
+	 		*
+	 	from
+	 		tbl_event
+	 	where
+	 		event_code = #{eventCode}
+	 </select>
+	 
+	 <update id="EventUpdate">
+	 	update tbl_event set
+		 	event_title = #{eventTitle},
+		 	event_content = #{eventContent},
+		 	event_start = #{eventStart},
+		 	event_end = #{eventEnd},
+		 	event_img_ori = #{eventImgOri},
+		 	event_img_re = #{eventImgRe}
+	 	where
+	 		event_code = #{eventCode}
+	 </update>
+	 
+
+	 <select id="MemberEnrollList" resultType="MemberEnrollList">
+		select 
+			count(*) num ,to_char(MEMBER_ENROLLDATE,'YYYY-MM-DD') Day
+		from 
+			member 
+		group by 
+			to_char(MEMBER_ENROLLDATE,'YYYY-MM-DD') 
+		order by 
+			to_char(MEMBER_ENROLLDATE,'YYYY-MM-DD') desc		
+	</select>
+	
+	 <select id="selectBoardTotalContents" resultType="_int">
+	 select count(*) from board where board_cate like #{boardCategory} and board_del = 'N'
+	 </select>
+	 
+	 <select id="selectMemberCount" resultType="_int">
+	 	select
+	 		count(*)
+	 	from
+	 		member 
+	 	where
+			member_role like #{memberRole}
+	 </select>
+	 
+</mapper>
+

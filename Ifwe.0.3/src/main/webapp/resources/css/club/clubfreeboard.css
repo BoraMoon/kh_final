@@ -1,0 +1,456 @@
+section{
+    width:1350px;
+    margin-left:45px;
+}
+.section-block{
+    width:1350px;
+    height:55px;
+    margin-top:55px;
+}
+.section-wrapper{
+    width:820px;
+    height:100%;
+
+}
+.section-boradall{
+    float: left;
+    font-size: 19px;
+}
+.section-block-right{
+    float: right;
+    width: 140px;
+    height:35px;
+    border-radius: 10px;
+    background-color: #ffc862;
+    color:white;
+    cursor: pointer;
+
+}
+.section-block-right p{
+    float: left;
+    margin-left: 30%;
+    margin-top:7%;
+}   
+.fa-pencil-alt{
+    margin-top:7%;
+    margin-left:6%;
+}
+
+
+
+.article1{
+    width:820px;
+    min-height: 1000px;
+}
+.article-board-notice{
+    background-color: white;
+    padding:30px 0;
+    width: 100%;
+    min-height: 420px;
+    margin-bottom: 50px;
+}
+.article-board-notice>p{
+	font-size:20px;
+	width:150px;
+	margin-left:35px;
+	font-weight: bold;
+	color:#2756a6;
+}
+.article-board-wrapper{
+    width:750px;
+    min-height: 420px;
+    margin:0 auto;
+
+}
+.article1-board-frofile{
+    width: 100%;
+    height:75px;
+    margin-top:4%;
+}
+.article1-frofile-img{
+    width:75px;
+    height:75px;
+    border-radius: 50%;
+    background-image: url("../../images/club/basicfrofile.png");
+    background-size: cover;
+    float: left;
+    overflow:hidden;
+}
+.article1-frofile-img img{
+	width:75px;
+	height:75px;
+}
+.article1-frofile-name{
+    float: left;
+    width: 200px;
+    height:60px;
+    margin-top:2%;
+    margin-left:2%;
+    font-size: 20px;
+    cursor: pointer;
+}
+.article1-leader-name{
+    font-weight: bold;
+}
+.article1-curcle-box{
+    float: right;
+    width: 8px;
+    height:36px;
+    margin-top:1%;
+}
+.article1-curcle{
+    border-radius: 50%;
+    width:8px;
+    height:8px;
+    background-color: #989898;
+    margin-top:4px;
+}
+.article1-boardmenu{
+    font-size:20px;
+    font-weight: bold;
+    margin-top:30px;
+}
+.article1-bard-content{
+    font-size:20px;
+    margin-top:30px;
+    margin-bottom: 30px;
+    transition:all .3s ease;
+    min-height:50px;
+}
+.article1-hashtag-container{
+    margin-bottom: 30px;
+    min-height: 64px;
+    position: relative;
+}
+.article1-hashtag-box{
+    border-radius: 20px;
+    background-color: #beceea;
+    font-size: 18px;
+    padding:7px 20px;
+    color: white;
+    text-align: center;
+    float: left;
+    margin-right: 10px;
+    margin-bottom: 10px;
+
+}   
+.article1-hashtag-block{
+    border:1px solid black;
+    width:100%;
+    height:10px;
+    position: absolute;
+    bottom: 0%;
+}
+.article1-line{
+    border: 1px solid #989898;
+    opacity: 0.5;
+    width: 100%;
+}
+.article1-comment-box{
+    width: 100%;
+    height:85px;
+    margin-top:3%
+}
+.article1-comment-box input[type=text]{
+    width:640px;
+    height:40px;
+    font-size:15px;
+    padding-left:3%;
+    border-radius: 20px;
+    background-color: #ebebeb;
+    outline: none;
+}
+.article1-comment-box input[type=submit]{
+	float: right;
+    height:40px;
+    font-size: 14px;
+    border-radius: 20px;
+    padding:0 20px;
+    color: white;
+    font-weight: bold;
+    background-color: #2756a6;
+    outline: none;
+}
+.article1-comment-count{
+    font-size: 18px;
+    height: 46px;
+}
+.article1-commnet-container{
+    font-size: 16px;
+    width: 100%;
+    height:65px;
+}
+.comment-frofile-img{
+    width: 35px;
+    height:35px;
+    border-radius: 50%;
+    background-image: url("../../images/club/basicfrofile.png");
+    background-size: cover;
+    float: left;
+    overflow:hidden;
+}
+.comment-frofile-img img{
+	width:35px;
+	height:35px;
+}
+.comment-sliderbutton{
+    width:100px;
+    cursor: pointer;
+}
+.comment-sliderbutton .fa-sort-down{
+	float:right;
+}
+.comment-block{
+    width:700px;
+    height:9px;
+    float: left;
+}
+.comment-hiddenbox{
+    width:750px;
+    display: none;
+}
+.comment-frofile-name{
+    font-weight: bold;
+    width: 110px;
+    float: left;
+    margin-left:2%;
+}
+.article1-commnet-container p{
+    float: left;
+}
+.comment-content{
+	width:500px;
+}
+.comment-right-box{
+    width: 82px;
+    height: 16px;
+    float: right;
+}
+.comment-right-box p{
+    float: right;
+    margin-left: 6%;
+    cursor: pointer;
+}
+.comment-right-box p:first-child{
+    color: red;
+}
+
+.article2{
+    width:500px;
+    margin-left: 20px;
+    background-color: white;
+}
+.article2-title{
+    width: 100%;
+    height:60px;
+    background-color: #2756a6;
+    color: white;
+}
+.article2-title p{
+    font-size: 20px;
+    margin-left:5%;
+    padding-top:3%;
+}
+.article2-container{
+    width: 450px;
+    margin:40px auto;
+}
+.article2-box{
+    width:450px;
+    height:100px;
+    font-size: 20px;
+    position: relative;
+}
+.article2-box p:first-child{
+    color: #2756a6;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 2%;
+}
+.article2-line{
+    border:1px solid #989898;
+    width: 100%;
+    bottom:0%;
+    position: absolute;
+}
+
+.article1-imgbox{
+    width:720px;
+    height:110px;
+    margin-bottom: 30px;
+    overflow: hidden;
+    position: relative;
+}
+.article1-imgcontainer{
+    border: 5px solid white;
+    width:170px;
+    height:100px;
+    float: left;
+
+}
+.article1-imgcontainer img{
+    width:170px;
+    height:100%;
+    float: left;
+}
+.article-imgfilter{
+    background-color: rgba(0,0,0,0.5);
+    width:170px;
+    height:100px;
+    position: absolute;
+    right:5px;
+    top:5px;
+}
+.article-imgfilter p{
+    color:white;
+    width:80px;
+    margin:0 auto;
+    margin-top:20%;
+    font-size:24px;
+    font-weight: bold;
+}
+
+body{
+	position: relative;
+	
+}
+.wrapper{
+	position:absolute;
+}
+
+.filter-container-container{
+    box-sizing: border-box;
+    display: none;
+    width:100%;
+    height:100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding-top:3%;
+    position: absolute;
+    top:0;
+    left:0;
+    z-index:10;
+}
+/* Position the image container (needed to position the left and right arrows) */
+.filter-container {
+    width:800px;
+    height:1000px;
+    position: relative;
+    margin:0 auto;
+}
+
+/* Hide the images by default */
+.mySlides {
+  display: none;
+}
+
+/* Add a pointer when hovering over the thumbnail images */
+.cursor {
+  cursor: pointer;
+}
+
+/* Next & previous buttons */
+.prev,
+.next {
+  cursor: pointer;
+  position: absolute;
+  top: 40%;
+  width: auto;
+  padding: 16px;
+  margin-top: -50px;
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
+  border-radius: 0 3px 3px 0;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Position the "next button" to the right */
+.next {
+  right: 0;
+  border-radius: 3px 0 0 3px;
+}
+
+/* On hover, add a black background color with a little bit see-through */
+.prev:hover,
+.next:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+/* Number text (1/3 etc) */
+.numbertext {
+  color: #f2f2f2;
+  font-size: 12px;
+  padding: 8px 12px;
+  position: absolute;
+  top: 0;
+}
+
+/* Container for image text */
+.caption-container {
+  text-align: center;
+  background-color: #222;
+  padding: 2px 16px;
+  color: white;
+}
+
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Six columns side by side */
+.column {
+  float: left;
+  width: 16.66%;
+}
+
+/* Add a transparency effect for thumnbail images */
+.demo {
+  opacity: 0.6;
+}
+
+.active,
+.demo:hover {
+  opacity: 1;
+}
+
+article1-bard-content + label{
+	display:none;
+}
+
+.article-board-wrapper input[type="checkbox"] {
+     display:none;
+}
+
+.article-board-wrapper label {
+     color:blue;
+     text-decoration:underline;
+     margin-top:10px;
+     cursor:pointer;
+     display:none;
+}
+
+.article-board-wrapper label:after {
+     content:"더보기";  
+}
+
+.article-board-wrapper input:checked ~ label:after {
+     content:"접기";  
+}
+
+.article1-hashtag-container ul{
+	list-style: none;
+}
+
+
+
+
+
+
+
+
+
+
+
